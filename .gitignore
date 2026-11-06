@@ -1,0 +1,7 @@
+node_modules/
+dist/
+shots/
+keys/*.pem
+.DS_Store
+docs/handoffs/
+docs/PROGRESS.md

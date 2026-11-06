@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="hr">
+<head><meta charset="utf-8"><title>Tab Mirror — postavke</title><link rel="stylesheet" href="style.css">
+<style>
+  body { max-width: 640px; margin: 32px auto; padding: 0 20px; font-size: 14px; }
+  section { border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin-top: 16px; }
+  label.check { display: flex; gap: 10px; align-items: flex-start; margin-top: 8px; }
+  input[type=text] { font: inherit; padding: 7px 10px; border: 1px solid var(--line); border-radius: var(--radius); width: 240px; }
+  .lead { font-size: 15px; color: var(--muted); margin-top: 6px; }
+  h2 { font-size: 15px; }
+</style>
+</head>
+<body>
+  <h1 style="font-size:20px">Tab Mirror</h1>
+  <p class="lead">Isti prozori, tabovi i grupe na svim tvojim računalima. Glavno je ono računalo na kojem trenutno radiš; drugo se posloži isto čim ga otvoriš.</p>
+
+  <section id="setup" class="stack"></section>
+
+  <section class="stack">
+    <h2>Ovo računalo</h2>
+    <div class="row"><input id="name" type="text" maxlength="40" aria-label="Naziv računala"><span id="nameSaved" class="small muted"></span></div>
+    <label class="check"><input id="auto" type="checkbox"><span><b>Automatski posloži</b> ovo računalo kad drugo objavi promjenu.</span></label>
+    <label class="check"><input id="paused" type="checkbox"><span><b>Pauza</b> — ovo računalo niti šalje niti prima promjene.</span></label>
+  </section>
+
+  <section class="stack" id="chrome-sync">
+    <h2>Chromeova sinkronizacija grupa</h2>
+    <p>Chrome uz Tab Mirror može i sam prenositi spremljene grupe. Proširenje tu postavku ne smije mijenjati, pa je gasiš ti, jednom na svakom računalu:</p>
+    <ol>
+      <li>Klikni gumb ispod.</li>
+      <li>Odaberi <b>Customize sync</b> (Prilagodi sinkronizaciju), ako je uključeno <b>Sync everything</b>.</li>
+      <li>Isključi <b>Saved tab groups</b> (Spremljene grupe kartica).</li>
+    </ol>
+    <div><button id="openSync">Otvori Chromeove postavke sinkronizacije</button></div>
+    <p class="small muted">Ako se ipak pojave dvije grupe istog imena u istom prozoru, Tab Mirror ih sam spoji.</p>
+  </section>
+
+  <section class="stack">
+    <h2>Provjera</h2>
+    <p>Oznaka proširenja mora biti <b>ista na oba računala</b>: <code id="extId"></code></p>
+    <p id="devices" class="muted"></p>
+    <p id="usage" class="small muted"></p>
+  </section>
+
+  <section class="stack">
+    <h2>Brisanje</h2>
+    <p class="muted">Briše zajednički raspored iz Google sinkronizacije. Otvoreni tabovi ostaju; nakon toga jedno računalo ponovno postaviš kao izvor.</p>
+    <div><button id="clear" class="danger">Obriši zajednički raspored…</button></div>
+  </section>
+  <script type="module" src="options.js"></script>
+</body>
+</html>

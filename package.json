@@ -1,0 +1,20 @@
+{
+  "name": "tab-mirror",
+  "version": "1.0.4",
+  "private": true,
+  "type": "module",
+  "description": "Chrome ekstenzija: isti prozori, tabovi i grupe na Macu i Windowsu preko Google sinkronizacije.",
+  "scripts": {
+    "test": "node --test test/unit/*.test.js",
+    "test:e2e": "node --test --test-concurrency=1 test/e2e/*.test.js",
+    "build": "node tools/build-zip.mjs"
+  },
+  "devDependencies": {
+    "puppeteer": "^24.0.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dd-jfranjic/tab-mirror.git"
+  }
+}

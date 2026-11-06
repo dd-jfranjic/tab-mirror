@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="hr">
+<head><meta charset="utf-8"><title>Tab Mirror</title><link rel="stylesheet" href="style.css">
+<style>body { width: 340px; padding: 14px; } #history[hidden] { display: none; } .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } .actions .wide { grid-column: span 2; }</style>
+</head>
+<body class="stack">
+  <div class="row between"><h1 id="device">Tab Mirror</h1><span id="role" class="pill"><span class="dot"></span><span></span></span></div>
+  <div id="summary" class="muted"></div>
+  <div id="notes" class="stack"></div>
+  <div class="actions">
+    <button id="take" class="primary wide" title="Ovo računalo postaje glavno i njegov raspored ide na drugo računalo">Uzmi raspored s ovog računala</button>
+    <button id="apply" title="Odmah posloži ovo računalo prema zadnjem zajedničkom rasporedu">Preuzmi zadnje</button>
+    <button id="pause">Pauza</button>
+  </div>
+  <div class="row between"><button id="toggleHistory">Povijest (vrati raspored)</button><a href="#" id="options" class="small">Postavke</a></div>
+  <ul id="history" class="list" hidden></ul>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+:root {
+  --ink: #1b1f24; --muted: #5d6670; --line: #e3e6ea; --bg: #ffffff; --soft: #f4f6f8;
+  --accent: #0f6e63; --accent-ink: #ffffff; --warn: #9a5b00; --warn-bg: #fff6e6; --bad: #a61b1b; --bad-bg: #fdeeee;
+  --ok: #1a7f37; --radius: 8px;
+}
+* { box-sizing: border-box; }
+/* Chrome stranicama proširenja ubacuje body { font-size: 75% } — zato veličina ide izravno na body. */
+body { margin: 0; font: 13px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto, sans-serif; color: var(--ink); background: var(--bg); }
+a { color: var(--accent); text-underline-offset: 2px; }
+h1 { font-size: 15px; margin: 0; font-weight: 650; }
+h2 { font-size: 13px; margin: 0 0 8px; font-weight: 650; }
+p { margin: 0 0 8px; }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+.row { display: flex; align-items: center; gap: 8px; }
+.between { justify-content: space-between; }
+.stack > * + * { margin-top: 10px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px; border-radius: 999px; background: var(--soft); font-size: 12px; font-weight: 600; white-space: nowrap; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.pill.leader .dot { background: var(--ok); } .pill.follower .dot { background: var(--accent); }
+.pill.setup .dot { background: var(--warn); }
+button { font: inherit; border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: var(--radius); padding: 7px 12px; cursor: pointer; }
+button:hover { background: var(--soft); }
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+button.primary:hover { filter: brightness(1.08); }
+button.danger { color: var(--bad); border-color: #efc6c6; }
+button:disabled { opacity: .5; cursor: default; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.note { padding: 8px 10px; border-radius: var(--radius); background: var(--warn-bg); color: var(--warn); }
+.note.bad { background: var(--bad-bg); color: var(--bad); }
+.list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: var(--radius); }
+.list li { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 7px 10px; }
+.list li + li { border-top: 1px solid var(--line); }
+.list button { padding: 3px 9px; font-size: 12px; }
+code { font: 12px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--soft); padding: 1px 5px; border-radius: 4px; }

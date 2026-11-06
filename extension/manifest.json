@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Mirror",
+  "short_name": "Tab Mirror",
+  "version": "1.0.4",
+  "description": "Isti prozori, tabovi i grupe na svim tvojim računalima — preko tvoje Google sinkronizacije, bez servera.",
+  "minimum_chrome_version": "120",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsfNqJH9uD+D/el35vySGJIOom+D5Vb/dCHy0uKwqZD7TrLC5NNG0StHGapNR2Ip0eZS/HgDPNzv7z9nix7UBYd7UIk4yuY5/xo1uguGM52wyw26TEIULn8Vqaet/CaR5r+h5Tj4ucYLjaRDXG3NYDzlHinK3rTQP+AxnIqRLFPAJ1brEWgTTNKwrfzyH2b6+ybmhVuynPTSAUYar2GgE2e/ae5VNy6w4UL0ZnrJKvrxJCG3Tqr+hilVUtb5//Xjwe17WcIL+dG4gSiyQJf3y/y0L+2xqbOG0LYS1HtFPIvORmU4/1Nnxzo0Mzqn/5W5XGGCovrWZDgagqEX05iOvPwIDAQAB",
+  "permissions": ["tabs", "tabGroups", "storage", "idle", "alarms", "webNavigation"],
+  "background": { "service_worker": "src/background.js", "type": "module" },
+  "action": {
+    "default_title": "Tab Mirror",
+    "default_popup": "ui/popup.html",
+    "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png" }
+  },
+  "options_ui": { "page": "ui/options.html", "open_in_tab": true },
+  "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+}
