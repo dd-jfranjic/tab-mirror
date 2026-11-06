@@ -54,6 +54,8 @@ Prijenos: chrome.storage.sync (Google sync korisnika), bez servera. Kvote: 100 K
   Zato pri nadogradnji jednom otvori uputu u postavkama (`#chrome-sync`), a dvije grupe istog imena u istom prozoru spaja prije svake
   objave koja smije krenuti (ne uz Pauzu) i nakon svake primjene (`kept.mergeDuplicateGroups`), bez obzira na uzrok; stanje prije toga je
   u povijesti. Grupe bez imena se ne diraju, a spojena grupa zadržava boju prve.
+- Chrome ugasi grupu čim iz nje izađu svi tabovi (npr. pri slaganju), pa `tabs.group` za zapamćenu grupu može pasti s „No group with id“; tada se pravi nova (v1.0.5). Prije je to rušilo primjenu na pola.
+- Pala primjena dodaje adrese cilja u bazu (`mergeUrls`): tab otvoren prije pada je zajednički, pa ga kasnija primjena smije zatvoriti (v1.0.5).
 - Objava čeka novije tuđe stanje koje još nije primijenjeno (`remote-first`, najviše 60 s): inače bi ga pregazila zastarjelim rasporedom.
 - Primjena koja padne (Chrome odbije izmjenu dok korisnik vuče tab) ponavlja se s alarmom, razmak 25 s, do 10 pokušaja; dok nije uspjela,
   računalo samo ne objavljuje (`apply-failed`), jer bi polovičan raspored drugome zatvorio tabove. Poruka u izborniku kaže što kliknuti

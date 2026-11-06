@@ -1,6 +1,6 @@
 // Objava (glavni uređaj) i primjena (pratitelj) — spaja čiste odluke s Chrome API-jima i stanjem.
 
-import { serialize, canonicalString, isEmptySnapshot, summarize, snapshotUrls } from './snapshot.js';
+import { serialize, canonicalString, isEmptySnapshot, summarize, snapshotUrls, mergeUrls } from './snapshot.js';
 import { encodeSnapshot, decodeSnapshot, sha256Hex, MAX_CHUNKS_PER_DEVICE } from './codec.js';
 import { readMetas, pickNewest, maxRev, chunksFor, buildSlotWrite } from './slots.js';
 import { decidePublish, decideApply, isConflict, nextRevision, hasUnappliedRemote, rememberBase, baseAt, APPLY_SETTLE_MS, REMOTE_WAIT_MS } from './lease.js';
@@ -96,14 +96,15 @@ async function rememberConflict(api, newest, state, me) {
 }
 
 /** Primjena je pala: lastApplied ostaje, pa je alarm ponavlja s razmakom, a objava čeka (vidi publish). */
-async function noteApplyFailure(api, rev, error) {
+async function noteApplyFailure(api, rev, error, urls) {
   const { applyFails } = await store.getSession(api);
   const n = (applyFails?.rev === rev ? applyFails.n : 0) + 1;
   await store.patchSession(api, { applyFails: { rev, n, at: Date.now() } });
   const lastError = n < MAX_APPLY_TRIES
     ? `Preuzimanje nije uspjelo, pokušavam ponovno (${n}/${MAX_APPLY_TRIES}). Promjene s ovog računala čekaju.`
     : `Preuzimanje nije uspjelo (${error}). Promjene s ovog računala se ne šalju dok ne klikneš „Preuzmi zadnje“.`;
-  await store.patchState(api, { lastError, pendingApply: true });
+  // Tabovi cilja otvoreni prije pada su zajednički: inače bi ih iduća primjena držala lokalnima i nikad ih ne bi zatvorila.
+  await store.patchState(api, (st) => ({ lastError, pendingApply: true, baseUrls: st.baseUrls ? mergeUrls(st.baseUrls, urls) : st.baseUrls }));
 }
 
 /** Stanje koje primjena mijenja ide u povijest (ikona → Povijest → Vrati). */
@@ -135,7 +136,7 @@ async function runApply(api, target, newest, state, before, baseUrls, selfMoved)
     }
   }
   if (error) {
-    await noteApplyFailure(api, newest.rev, error);
+    await noteApplyFailure(api, newest.rev, error, snapshotUrls(target));
     return;
   }
   await mergeDuplicateGroups(api); // stanje prije primjene je već u povijesti

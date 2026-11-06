@@ -175,3 +175,24 @@ test('H: uz Pauzu se grupe ne spajaju; bez nje spajanje ostavi stanje u povijest
   assert.equal((await layout(mac)).groups.filter((g) => g.title === 'dvojnik').length, 1);
 });
 
+test('I: tab koji je nestao preuzimanjem spremljen je u povijesti i „Vrati“ ga vraća na oba računala', async () => {
+  await present(mac, win);
+  await waitFor(sameTabs, { timeout: 30_000, label: 'polazno isto' });
+  const url = site.url('vazan-tab');
+  await addTab(mac, url);
+  await waitFor(() => has(win, 'vazan-tab'), { timeout: 30_000, label: 'tab stigao na Windows' });
+  await sleep(1500);
+  await mac.eval(async (url) => { const [t] = await chrome.tabs.query({ url }); await chrome.tabs.remove(t.id); }, url);
+  await waitFor(async () => !(await has(win, 'vazan-tab')), { timeout: 30_000, label: 'tab zatvoren na Windowsu' });
+  const history = await win.eval(async () => (await chrome.storage.local.get('tm.history'))['tm.history'] || []);
+  const index = history.findIndex((h) => JSON.stringify(h.snapshot).includes('vazan-tab'));
+  assert.ok(index >= 0, 'stanje prije preuzimanja nije spremljeno u povijest');
+  assert.match(history[index].label, /^Prije preuzimanja/);
+  await present(win, mac);
+  const res = await win.message('restore', { index });
+  assert.ok(res.ok, JSON.stringify(res));
+  await waitFor(() => has(win, 'vazan-tab'), { timeout: 30_000, label: 'tab vraćen na Windows' });
+  await waitFor(() => has(mac, 'vazan-tab'), { timeout: 30_000, label: 'tab vraćen i na Mac' });
+  await waitFor(sameTabs, { timeout: 20_000, label: 'isti tabovi na oba' });
+});
+

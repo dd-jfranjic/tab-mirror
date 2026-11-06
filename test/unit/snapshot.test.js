@@ -60,3 +60,11 @@ test('isValidSnapshot odbija neispravan podatak iz synca', () => {
   assert.ok(!isValidSnapshot({ v: 1, w: [{ t: [['https://a.hr/', 0, 3]], g: [], a: 0 }] }));
   assert.ok(!isValidSnapshot(null));
 });
+
+test('mergeUrls: unija po broju ponavljanja, bez gubitka redoslijeda', async () => {
+  const { mergeUrls } = await import('../../extension/src/snapshot.js');
+  assert.deepEqual(mergeUrls(['a', 'b', 'a'], ['a', 'c']), ['a', 'b', 'a', 'c']);
+  assert.deepEqual(mergeUrls(['a'], ['a', 'a']), ['a', 'a']);
+  assert.deepEqual(mergeUrls(null, ['a']), ['a']);
+});
+

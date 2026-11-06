@@ -1,6 +1,6 @@
 {
   "name": "tab-mirror",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "type": "module",
   "description": "Chrome ekstenzija: isti prozori, tabovi i grupe na Macu i Windowsu preko Google sinkronizacije.",

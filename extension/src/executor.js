@@ -66,6 +66,18 @@ async function currentGroups(api, ids) {
   return new Map(tabs.map((t) => [t.id, t.groupId ?? -1]));
 }
 
+/** Chrome ugasi grupu čim iz nje izađu svi tabovi (npr. pri slaganju), pa zapamćene grupe možda više nema: tada nova. */
+async function groupTabs(api, winId, tabIds, groupId) {
+  const fresh = { tabIds, createProperties: { windowId: winId } };
+  if (groupId === null) return api.tabs.group(fresh);
+  try {
+    return await api.tabs.group({ groupId, tabIds });
+  } catch (err) {
+    if (!/no group/i.test(String(err?.message))) throw err;
+    return api.tabs.group(fresh);
+  }
+}
+
 async function applyGroups(api, winId, tw, ids, fresh) {
   const now = await currentGroups(api, ids);
   const mapped = fresh ? tw.g.map(() => null) : mapGroups(now, tw, ids);
@@ -79,8 +91,7 @@ async function applyGroups(api, winId, tw, ids, fresh) {
   for (let gi = 0; gi < tw.g.length; gi++) {
     const members = ids.filter((_, k) => tw.t[k][2] === gi);
     if (!members.length) continue;
-    const opts = mapped[gi] !== null ? { groupId: mapped[gi], tabIds: members } : { tabIds: members, createProperties: { windowId: winId } };
-    const gid = await api.tabs.group(opts);
+    const gid = await groupTabs(api, winId, members, mapped[gi]);
     const g = tw.g[gi];
     await api.tabGroups.update(gid, { title: g.n, color: g.c, collapsed: false });
   }

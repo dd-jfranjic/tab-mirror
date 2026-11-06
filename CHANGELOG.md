@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.5 (2026-11-06)
+
+- Applying a layout no longer stops halfway when Chrome has already closed an emptied tab group. A new group is made instead. This could leave tabs and groups out of step between the computers.
+- A tab opened during a layout that failed to apply is now treated as shared, so closing it on the other computer closes it here too.
+
 ## 1.0.4 (2026-11-06)
 
 - A change made while the computer is idle no longer gets lost. It goes out when you come back.

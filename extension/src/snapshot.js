@@ -113,6 +113,18 @@ export function snapshotUrls(snapshot) {
   return (snapshot?.w || []).flatMap((w) => w.t.map((t) => t[0]));
 }
 
+/** Spoj dvaju popisa adresa: svaka adresa onoliko puta koliko je ima na duljem popisu. */
+export function mergeUrls(a, b) {
+  const out = [...(a || [])];
+  const left = new Map();
+  for (const u of out) left.set(u, (left.get(u) || 0) + 1);
+  for (const u of b || []) {
+    if (left.get(u) > 0) left.set(u, left.get(u) - 1);
+    else out.push(u);
+  }
+  return out;
+}
+
 export function summarize(snapshot) {
   const windows = snapshot?.w?.length || 0;
   const tabs = countTabs(snapshot);
