@@ -12,6 +12,11 @@ You work on a Mac at the office and a Windows PC at home. Tab Mirror keeps the s
 
 Whichever computer you are using right now leads. The other one rearranges itself to match. Everything travels through your own Google account's Chrome sync, so there is no server, no sign-up and no cost.
 
+<p align="center">
+  <img src="docs/two-computers.png" alt="Two browser windows showing the same tabs in the same Work and Reading groups" width="100%"><br>
+  <sub>Two separate browsers running the real extension, with made-up sites. Same tabs, same order, same groups.</sub>
+</p>
+
 > **Before you install:**
 > - The extension's buttons and messages are in Croatian for now. This page tells you what each one means.
 > - It isn't in the Chrome Web Store. You install it by hand, and you update it by hand.
@@ -56,6 +61,10 @@ That's the whole setup. From now on it runs by itself.
 
 Click the toolbar icon to open the menu.
 
+<p align="center">
+  <img src="docs/menu.png" alt="The Tab Mirror menu, in Croatian, with its buttons and one saved layout in the history" width="340">
+</p>
+
 | In the extension | In English | What it does |
 |---|---|---|
 | Uzmi raspored s ovog računala | Use this computer's layout | This computer becomes the leader right now |
@@ -72,6 +81,12 @@ The icon's badge tells you the state:
 | `?` | This computer isn't set up yet. Open settings. |
 | `❚❚` | Paused |
 | `!` | A conflict or an error. Open the menu to read it. |
+
+<details>
+<summary>What the settings page looks like</summary>
+<br>
+<img src="docs/settings.png" alt="The Tab Mirror settings page, in Croatian" width="600">
+</details>
 
 ## If something goes wrong
 

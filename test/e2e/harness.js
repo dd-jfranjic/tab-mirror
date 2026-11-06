@@ -33,11 +33,12 @@ export async function startSite() {
 
 const CHROMIUM = [process.env.TM_CHROMIUM].find((p) => p && existsSync(p)); // inače Puppeteerov Chrome
 
-export async function launchDevice(name, { userAgent } = {}) {
+export async function launchDevice(name, { userAgent, headless = true, args = [] } = {}) {
   const dir = mkdtempSync(join(tmpdir(), `tm-${name}-`));
   const browser = await puppeteer.launch({
-    executablePath: CHROMIUM, headless: true, pipe: true, userDataDir: dir,
-    args: [`--disable-extensions-except=${EXT_DIR}`, `--load-extension=${EXT_DIR}`, '--no-sandbox', ...(userAgent ? [`--user-agent=${userAgent}`] : [])],
+    executablePath: CHROMIUM, headless, pipe: true, userDataDir: dir, defaultViewport: headless ? undefined : null,
+    ignoreDefaultArgs: headless ? undefined : ['--enable-automation'],
+    args: [`--disable-extensions-except=${EXT_DIR}`, `--load-extension=${EXT_DIR}`, '--no-sandbox', ...(userAgent ? [`--user-agent=${userAgent}`] : []), ...args],
   });
   const target = await browser.waitForTarget((t) => t.type() === 'service_worker');
   const sw = await target.worker();

@@ -12,6 +12,11 @@ U uredu radiš na Macu, a doma na Windowsu. Tab Mirror drži iste Chrome prozore
 
 Glavno je ono računalo na kojem trenutno radiš, a drugo se samo posloži isto. Sve ide kroz Chromeovu sinkronizaciju tvog Google računa, pa nema servera, registracije ni troška.
 
+<p align="center">
+  <img src="docs/two-computers.png" alt="Dva prozora preglednika s istim tabovima u istim grupama Work i Reading" width="100%"><br>
+  <sub>Dva odvojena preglednika s pravim proširenjem i izmišljenim stranicama. Isti tabovi, isti redoslijed, iste grupe.</sub>
+</p>
+
 > **Prije instalacije:**
 > - Proširenje nije u Chrome Web Storeu. Instaliraš ga ručno i ručno ga nadograđuješ.
 > - Napravljeno je za dva računala. Koristi se na Macu i Windowsu, a Linux i ChromeOS nisu isprobani.
@@ -55,6 +60,10 @@ To je cijelo postavljanje. Od sada sve ide samo.
 
 Klikni ikonu u alatnoj traci i otvori se izbornik.
 
+<p align="center">
+  <img src="docs/menu.png" alt="Izbornik Tab Mirrora s gumbima i jednim spremljenim rasporedom u povijesti" width="340">
+</p>
+
 | Gumb | Što radi |
 |---|---|
 | Uzmi raspored s ovog računala | Ovo računalo odmah postaje glavno |
@@ -71,6 +80,12 @@ Oznaka na ikoni govori u kojem je stanju:
 | `?` | Računalo još nije postavljeno. Otvori postavke. |
 | `❚❚` | Pauza |
 | `!` | Sukob ili greška. Otvori izbornik i pročitaj. |
+
+<details>
+<summary>Kako izgleda stranica postavki</summary>
+<br>
+<img src="docs/settings.png" alt="Stranica postavki Tab Mirrora" width="600">
+</details>
 
 ## Ako nešto pođe po zlu
 
