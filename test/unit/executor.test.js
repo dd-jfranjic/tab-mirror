@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { applySnapshot } from '../../extension/src/executor.js';
 
-function fakeChrome(tabs, groups, { goneGroups = [] } = {}) {
+function fakeChrome(tabs, groups, { goneGroups = [], moveFails = false } = {}) {
   const win = () => ({ id: 1, type: 'normal', tabs: tabs.map((t, index) => ({ ...t, index })) });
   let nextGroup = 100;
   return {
@@ -12,7 +12,8 @@ function fakeChrome(tabs, groups, { goneGroups = [] } = {}) {
     tabs: {
       get: async (id) => tabs.find((t) => t.id === id),
       query: async () => tabs,
-      move: async () => {},
+      move: async () => { if (moveFails) throw new Error('Tabs cannot be edited right now'); },
+      create: async ({ url }) => { const t = { id: 50 + tabs.length, windowId: 1, url, pinned: false, active: false, groupId: -1 }; tabs.push(t); return t; },
       update: async () => {},
       remove: async () => {},
       ungroup: async () => {},
@@ -49,3 +50,15 @@ test('grupa koja postoji se koristi i dalje', async () => {
   assert.equal(res.error, undefined);
   assert.deepEqual(tabs.map((t) => t.groupId), [7, 7]);
 });
+
+test('pala primjena javlja samo adrese tabova koji stvarno postoje', async () => {
+  const tabs = open();
+  const twoWindows = { v: 1, w: [
+    { t: [['https://a/', 0, 0], ['https://b/', 0, 0], ['https://novi/', 0, -1]], g: [{ n: 'Posao', c: 'blue', x: 0 }], a: 0 },
+    { t: [['https://nije-otvoren/', 0, -1]], g: [], a: 0 },
+  ] };
+  const res = await applySnapshot(fakeChrome(tabs, [{ id: 7, windowId: 1, title: 'Posao', color: 'blue', collapsed: false }], { moveFails: true }), twoWindows);
+  assert.ok(res.error);
+  assert.deepEqual(res.openedUrls.sort(), ['https://a/', 'https://b/', 'https://novi/']);
+});
+

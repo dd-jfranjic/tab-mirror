@@ -175,7 +175,7 @@ async function navigateTabs(api, navigate, created) {
  * @param {string[]|null} [opts.baseUrls] adrese zadnjeg zajedničkog stanja; tabovi izvan njega se ne zatvaraju
  * @param {object} [opts.origins] veze tabova iz prošle primjene (origins.js)
  * @param {boolean} [opts.selfMoved] prepoznaj tab koji je sam promijenio adresu (ne pri pokretanju Chromea ni pri sukobu)
- * @returns {Promise<{created: number, closed: number, kept: number, origins: object, error?: Error}>}
+ * @returns {Promise<{created: number, closed: number, kept: number, origins: object, openedUrls?: string[], error?: Error}>}
  *   kept = sačuvani tabovi koje drugo računalo još nema
  *   error = primjena je stala na pola; origins tada drži i veze tabova koji su do tada otvoreni
  */
@@ -208,6 +208,7 @@ export async function applySnapshot(api, target, { baseUrls = null, origins = {}
   }
   const fresh = originEntries(keys, await api.tabs.query({}), Date.now(), created);
   const kept = keptTabIds.length;
-  if (failure) return { created: created.size, closed: 0, kept, origins: { ...origins, ...fresh }, error: failure };
+  // Samo adrese tabova koji stvarno postoje: neotvorena adresa u bazi izgledala bi kao tab koji je sam promijenio adresu.
+  if (failure) return { created: created.size, closed: 0, kept, origins: { ...origins, ...fresh }, openedUrls: Object.values(keys), error: failure };
   return { created: created.size, closed: closeTabIds.length, kept, origins: fresh };
 }

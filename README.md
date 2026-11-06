@@ -139,7 +139,7 @@ Your settings, layout and history stay. **Never click Remove**, because that del
 
 ```
 npm install        # only needed for the browser tests (Puppeteer)
-npm test           # 87 unit tests
+npm test           # 88 unit tests
 npm run test:e2e   # 27 scenarios on two real Chromium instances with a fake Google sync
 npm run build      # dist/tab-mirror-<version>.zip
 ```

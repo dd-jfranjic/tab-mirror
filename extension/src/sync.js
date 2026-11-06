@@ -103,7 +103,7 @@ async function noteApplyFailure(api, rev, error, urls) {
   const lastError = n < MAX_APPLY_TRIES
     ? `Preuzimanje nije uspjelo, pokušavam ponovno (${n}/${MAX_APPLY_TRIES}). Promjene s ovog računala čekaju.`
     : `Preuzimanje nije uspjelo (${error}). Promjene s ovog računala se ne šalju dok ne klikneš „Preuzmi zadnje“.`;
-  // Tabovi cilja otvoreni prije pada su zajednički: inače bi ih iduća primjena držala lokalnima i nikad ih ne bi zatvorila.
+  // Tabovi cilja koji su otvoreni prije pada su zajednički: inače bi ih iduća primjena držala lokalnima i nikad ih ne bi zatvorila.
   await store.patchState(api, (st) => ({ lastError, pendingApply: true, baseUrls: st.baseUrls ? mergeUrls(st.baseUrls, urls) : st.baseUrls }));
 }
 
@@ -120,12 +120,14 @@ async function runApply(api, target, newest, state, before, baseUrls, selfMoved)
   if (applyFails?.rev !== newest.rev) await rememberBefore(api, before, newest.sh, `Prije preuzimanja s: ${newest.name || newest.dev}`);
   let error = '';
   let kept = 0;
+  let openedUrls = [];
   if (before.sh !== newest.sh) {
     const session = await store.patchSession(api, { applyingUntil: Date.now() + APPLY_GUARD_MS });
     try {
       // Veze se spremaju i kad primjena padne na pola — inače bi iduća primjena preusmjerene tabove otvorila ponovno.
       const result = await applySnapshot(api, target, { baseUrls, origins: session.origins, selfMoved });
       kept = result.kept;
+      openedUrls = result.openedUrls || [];
       await store.patchSession(api, { origins: result.origins });
       await persistOriginPairs(api);
       if (result.error) throw result.error;
@@ -136,7 +138,7 @@ async function runApply(api, target, newest, state, before, baseUrls, selfMoved)
     }
   }
   if (error) {
-    await noteApplyFailure(api, newest.rev, error, snapshotUrls(target));
+    await noteApplyFailure(api, newest.rev, error, openedUrls);
     return;
   }
   await mergeDuplicateGroups(api); // stanje prije primjene je već u povijesti

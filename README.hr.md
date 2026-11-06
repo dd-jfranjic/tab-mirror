@@ -138,7 +138,7 @@ Postavke, raspored i povijest ostaju. **Nikad ne klikni Remove**, jer to briše 
 
 ```
 npm install        # treba samo za testove u pregledniku (Puppeteer)
-npm test           # 87 jediničnih testova
+npm test           # 88 jediničnih testova
 npm run test:e2e   # 27 scenarija na dva prava Chromiuma s lažnom Google sinkronizacijom
 npm run build      # dist/tab-mirror-<verzija>.zip
 ```
