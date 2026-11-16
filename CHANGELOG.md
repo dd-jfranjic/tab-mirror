@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.6 (2026-11-16)
+
+- The same page twice in one window is never sent to the other computer. Before sending and after receiving a layout, Tab Mirror keeps one copy (active, then pinned, then grouped) and closes the rest; the layout from before is saved in the history. This holds whatever made the copy, for example Chrome reopening every tab twice when it starts.
+- When a layout arrives, only a page the other computer has never seen counts as a new tab to keep. Another copy of a page both computers already have does not.
+
 ## 1.0.5 (2026-11-06)
 
 - Applying a layout no longer stops halfway when Chrome has already closed an emptied tab group. A new group is made instead. This could leave tabs and groups out of step between the computers.

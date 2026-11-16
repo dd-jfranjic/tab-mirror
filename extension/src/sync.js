@@ -6,6 +6,7 @@ import { readMetas, pickNewest, maxRev, chunksFor, buildSlotWrite } from './slot
 import { decidePublish, decideApply, isConflict, nextRevision, hasUnappliedRemote, rememberBase, baseAt, APPLY_SETTLE_MS, REMOTE_WAIT_MS } from './lease.js';
 import { applySnapshot } from './executor.js';
 import { mergeDuplicateGroups } from './kept.js';
+import { closeDuplicateTabs } from './dedupe.js';
 import { sanitizeSnapshot } from './planner.js';
 import { pushHistory } from './history.js';
 import { withOriginUrls } from './origins.js';
@@ -49,12 +50,15 @@ export async function publish(api, { manual = false } = {}) {
   const { snapshot, sh } = await readLocalSnapshot(api);
   const { settings, state, writeTimes, now, decision } = await publishContext(api, manual, sh, snapshot);
   if (decision.action !== 'publish') return decision;
-  const { applyFails, remoteWait } = await store.getSession(api);
+  const { applyFails, remoteWait, origins } = await store.getSession(api);
   // Polovično primijenjen raspored se ne objavljuje sam: drugom bi računalu zatvorio tabove (ručna objava smije).
   if (!manual && settings.autoApply && applyFails) return { action: 'wait-present', reason: 'apply-failed' };
   // Na drugo računalo nikad ne idu dvije grupe istog imena; stanje prije spajanja je u povijesti.
   const groupsMerged = await mergeDuplicateGroups(api, () => rememberBefore(api, { snapshot, sh }, null, 'Prije spajanja grupa istog imena'));
   if (groupsMerged) return { action: 'defer', reason: 'groups-merged', delayMs: 500 };
+  // Ni ista stranica dvaput u istom prozoru (dedupe.js).
+  const duplicates = await closeDuplicateTabs(api, origins, () => rememberBefore(api, { snapshot, sh }, null, 'Prije zatvaranja duplih tabova'));
+  if (duplicates) return { action: 'defer', reason: 'duplicates-closed', delayMs: 500 };
   const { chunks, h } = await encodeSnapshot(snapshot);
   if (chunks.length > MAX_CHUNKS_PER_DEVICE) {
     await store.patchState(api, { lastError: 'too-big' });
@@ -142,6 +146,7 @@ async function runApply(api, target, newest, state, before, baseUrls, selfMoved)
     return;
   }
   await mergeDuplicateGroups(api); // stanje prije primjene je već u povijesti
+  await closeDuplicateTabs(api, (await store.getSession(api)).origins);
   await store.patchSession(api, { applyFails: null });
   const merged = kept > 0;
   const after = await readLocalSnapshot(api);

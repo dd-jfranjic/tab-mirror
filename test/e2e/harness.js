@@ -152,9 +152,16 @@ export function createCloud(devices) {
     }
   }
   let timer = null;
+  let run = 0;
   return {
-    start(ms = 300) { const loop = async () => { await tick().catch(() => {}); timer = setTimeout(loop, ms); }; loop(); },
-    stop() { clearTimeout(timer); },
+    // stop() usred kruga: krug koji završi poslije više ne postavlja timer (inače proces testa nikad ne izađe),
+    // a ni stara petlja ne nastavlja uz novu nakon ponovnog start().
+    start(ms = 300) {
+      const mine = ++run;
+      const loop = async () => { await tick().catch(() => {}); if (mine === run) timer = setTimeout(loop, ms); };
+      loop();
+    },
+    stop() { run++; clearTimeout(timer); },
     tick,
   };
 }

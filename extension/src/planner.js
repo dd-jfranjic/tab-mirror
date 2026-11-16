@@ -62,8 +62,11 @@ function takeTab(pool, match, preferIndex) {
 }
 
 /**
- * Tabovi koje drugo računalo nikad nije vidjelo (lokalno ih ima više nego u zadnjem zajedničkom stanju koje ovo
- * računalo zna) ne zatvaraju se pri primjeni — npr. Chrome otvoren klikom na poveznicu iz maila.
+ * Tabovi s adresom koju drugo računalo nikad nije vidjelo (nema je u zadnjem zajedničkom stanju koje ovo računalo zna)
+ * ne zatvaraju se pri primjeni — npr. Chrome otvoren klikom na poveznicu iz maila.
+ * Dodatna kopija adrese koja je već zajednička NIJE nov tab: Chrome zna pri pokretanju vratiti svaki tab dvaput
+ * (Windows, 16.11.2026), pa bi se čuvanjem kopija duplikati prenijeli na drugo računalo. Broj primjeraka zajedničke
+ * adrese zato određuje cilj.
  * @param {object[]} localWins
  * @param {string[]|null} baseUrls adrese zadnjeg zajedničkog stanja (null = nema baze → ništa se ne čuva)
  * @returns {Map<string, number>} ključ (adresa) → koliko primjeraka sačuvati
@@ -71,9 +74,9 @@ function takeTab(pool, match, preferIndex) {
 export function localOnlyUrls(localWins, baseUrls) {
   const keep = new Map();
   if (!Array.isArray(baseUrls)) return keep;
-  const base = urlCounts(baseUrls);
+  const base = new Set(baseUrls);
   const local = urlCounts(localWins.flatMap((lw) => lw.tabs.filter((t) => isSyncableUrl(t.url)).map(keyOf)));
-  for (const [u, k] of local) if (k > (base.get(u) || 0)) keep.set(u, k - (base.get(u) || 0));
+  for (const [u, k] of local) if (!base.has(u)) keep.set(u, k);
   return keep;
 }
 

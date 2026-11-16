@@ -106,6 +106,8 @@ Only the computer you are really using may write: Chrome must be in focus and yo
 
 If you change things on both computers before sync catches up, tabs you added on either side are kept on both. A tab you closed during that moment can come back. Better one tab too many than one lost. Tab groups with the same name in the same window are merged into one, and the layout from before the merge is saved in the history.
 
+The same page twice in one window never travels to the other computer, whatever made the copy: Chrome reopening every tab twice when it starts, Chrome's own saved tab group sync, or anything else. Before sending and after receiving a layout, Tab Mirror keeps one copy and closes the rest. It keeps the active copy first, then a pinned one, then one in a group. The layout from before is saved in the history. So whichever computer you sit down at, it shows what the other one had, without duplicates.
+
 ## Privacy
 
 - The extension makes no network requests of its own. There is no server, no analytics and no tracking.
@@ -132,6 +134,7 @@ Your settings, layout and history stay. **Never click Remove**, because that del
 ## Limits
 
 - Chrome gives extensions 100 KB of sync space. That is enough for about 500 tabs per computer with two computers.
+- If you open the same page twice in one window on purpose, the extra copy closes the next time your layout is sent.
 - Normal windows only. Incognito, app windows and developer tools windows are left alone.
 - A tab that sends itself to a different website while the computer is idle, such as a single sign-on page, stays as a separate tab and gets synced.
 

@@ -77,8 +77,28 @@ test('tab koji drugo računalo nikad nije vidjelo se ne zatvara (npr. Chrome otv
 test('bez baze (prvo preuzimanje) ništa se ne čuva', async () => {
   const { localOnlyUrls } = await import('../../extension/src/planner.js');
   assert.equal(localOnlyUrls([lw(1, ['https://a/'], 10)], null).size, 0);
-  const keep = localOnlyUrls([lw(1, ['https://a/', 'https://a/'], 10)], ['https://a/']);
-  assert.equal(keep.get('https://a/'), 1);
+});
+
+test('kopija zajedničke adrese nije nov tab: Chrome na startu vrati svaki tab dvaput → višak se zatvara', async () => {
+  const { localOnlyUrls } = await import('../../extension/src/planner.js');
+  const local = [lw(1, ['https://a/', 'https://a/', 'https://b/', 'https://b/', 'https://nov/', 'https://nov/'], 10)];
+  const base = ['https://a/', 'https://b/'];
+  const keep = localOnlyUrls(local, base);
+  assert.deepEqual([...keep], [['https://nov/', 2]]); // adresa koju drugo računalo ne zna čuva se cijela
+  const { assign, closeTabIds, keptTabIds } = assignTabs(local, [{ t: [T('https://a/'), T('https://b/')], g: [] }], [1], keep);
+  assert.equal(assign[0].filter((id) => id !== null).length, 2);
+  assert.equal(closeTabIds.length, 2); // po jedna kopija a i b
+  assert.equal(keptTabIds.length, 2);
+});
+
+test('cilj s dvije kopije iste adrese zadrži dvije (namjerno otvorene na drugom računalu)', async () => {
+  const { localOnlyUrls } = await import('../../extension/src/planner.js');
+  const local = [lw(1, ['https://a/', 'https://a/', 'https://a/'], 10)];
+  const keep = localOnlyUrls(local, ['https://a/', 'https://a/']);
+  assert.equal(keep.size, 0);
+  const { assign, closeTabIds } = assignTabs(local, [{ t: [T('https://a/'), T('https://a/')], g: [] }], [1], keep);
+  assert.equal(assign[0].filter((id) => id !== null).length, 2);
+  assert.equal(closeTabIds.length, 1);
 });
 
 test('preusmjereni tab (otvoren za U, stranica ga poslala na prijavu) se sparuje s U — ne otvara se iznova', () => {

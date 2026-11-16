@@ -105,6 +105,8 @@ Pisati smije samo računalo za kojim stvarno sjediš: Chrome mora biti u fokusu,
 
 Ako nešto promijeniš na oba računala prije nego što sinkronizacija stigne, tabovi dodani s bilo koje strane ostaju na oba. Tab koji si baš tada zatvorio može se vratiti. Bolje tab viška nego izgubljen tab. Grupe istog imena u istom prozoru spajaju se u jednu, a raspored prije spajanja ostaje u povijesti.
 
+Ista stranica dvaput u istom prozoru nikad ne putuje na drugo računalo, tko god napravio kopiju: Chrome koji pri pokretanju vrati svaki tab dvaput, Chromeova sinkronizacija spremljenih grupa ili nešto treće. Prije slanja i nakon preuzimanja Tab Mirror ostavi jednu kopiju, a ostale zatvori. Prednost ima aktivna kopija, zatim prikvačena, zatim ona u grupi. Raspored od prije ostaje u povijesti. Za koje god računalo sjedneš, ono pokazuje ono što je drugo imalo, bez duplikata.
+
 ## Privatnost
 
 - Proširenje samo ne radi nikakve mrežne pozive. Nema servera, analitike ni praćenja.
@@ -131,6 +133,7 @@ Postavke, raspored i povijest ostaju. **Nikad ne klikni Remove**, jer to briše 
 ## Ograničenja
 
 - Chrome proširenjima daje 100 KB prostora za sinkronizaciju. To je dovoljno za oko 500 tabova po računalu, uz dva računala.
+- Otvoriš li namjerno istu stranicu dvaput u istom prozoru, višak se zatvori pri idućem slanju rasporeda.
 - Samo obični prozori. Incognito, prozori aplikacija i razvojnih alata ostaju netaknuti.
 - Tab koji sam prijeđe na drugu stranicu dok računalo miruje, npr. na zajedničku prijavu, ostaje kao zaseban tab i prenese se na drugo računalo.
 

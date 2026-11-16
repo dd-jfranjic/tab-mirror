@@ -42,6 +42,16 @@ Prijenos: chrome.storage.sync (Google sync korisnika), bez servera. Kvote: 100 K
   Takav tab u grupi (v1.0.3, kept.js) ide uz zajedničke tabove svoje stare grupe (preimenovanje, nova boja, raspuštanje
   ga prate); grupa bez ijednog zajedničkog taba ostaje lokalna. Prije 1.0.3 ostajao je u staroj grupi → druga grupa
   istog imena koja se objavi na drugo računalo.
+  Od v1.0.6 se čuva samo ADRESA izvan baze (sve njezine kopije); dodatna kopija adrese iz baze nije nov tab, broj kopija
+  određuje cilj. Povod: Windows je 16.11.2026. pri pokretanju Chromea vratio svaki tab dvaput (62 → 124, u istim grupama),
+  a 1.0.5 je višak brojao kao nove tabove, čuvao ih i objavio (22 duplikata stigla bi na Mac). Cijena: kopiju zajedničke
+  adrese koju si namjerno otvorio na jednom računalu zatvori primjena tuđeg stanja koje nije građeno na njoj (stanje ostaje u povijesti).
+- Ista adresa dvaput u istom prozoru (v1.0.6, dedupe.js): prije svake objave koja smije krenuti (ne uz Pauzu) i nakon svake
+  primjene ostaje jedna kopija (aktivna, pa prikvačena, pa u grupi, pa prva s lijeva), ostale se zatvaraju; prije objave stanje ide u
+  povijest („Prije zatvaranja duplih tabova“). Adresa je objavna (preusmjereni tab pod izvornom). Vrijedi bez obzira na uzrok
+  (Chrome na startu, Chromeova sinkronizacija grupa, kasno vraćeni tabovi nakon `waitForStableTabs`), kao spajanje grupa.
+  Josipov zahtjev: računalo za koje sjedneš = ono s kojeg si došao, u oba smjera, nikad s duplikatima.
+  Cijena: namjerno otvorena ista stranica dvaput u istom prozoru se zatvori. Ista adresa u dva prozora nije duplikat.
 - Sačuvani tabovi se objavljuju (v1.0.4): nakon primjene sa sačuvanim tabom postignuto stanje nije zajedničko, pa ide u red
   za objavu; kad je korisnik tu, oba računala imaju isto. Zajednička grupa koje više nema ne ostaje zbog sačuvanog taba.
 - Interna stranica (chrome://) u grupi prati grupu kao i sačuvani tab (v1.0.4), a sama se ne prenosi.
